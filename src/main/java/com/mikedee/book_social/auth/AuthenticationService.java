@@ -1,5 +1,6 @@
 package com.mikedee.book_social.auth;
 
+import com.mikedee.book_social.email.EmailService;
 import com.mikedee.book_social.role.RoleRepository;
 import com.mikedee.book_social.user.Token;
 import com.mikedee.book_social.user.TokenRepository;
@@ -21,6 +22,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final EmailService emailService;
 
 
     public void register(RegistrationRequest request) {
@@ -44,6 +46,7 @@ public class AuthenticationService {
     private void sendValidationEmail(User user) {
         var newToken = generateAndSaveActivationToken(user);
         // send email
+
     }
 
     private String generateAndSaveActivationToken(User user) {
