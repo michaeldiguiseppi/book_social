@@ -1,12 +1,15 @@
 package com.mikedee.book_social.auth;
 
 import com.mikedee.book_social.email.EmailService;
+import com.mikedee.book_social.email.EmailTemplateName;
 import com.mikedee.book_social.role.RoleRepository;
 import com.mikedee.book_social.user.Token;
 import com.mikedee.book_social.user.TokenRepository;
 import com.mikedee.book_social.user.User;
 import com.mikedee.book_social.user.UserRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +27,11 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     private final EmailService emailService;
 
+    @Value("${application.mailing.frontend.activation-url}")
+    private String activationUrl;
 
-    public void register(RegistrationRequest request) {
+
+    public void register(RegistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName("USER")
                 // todo: better exception handling
                 .orElseThrow(() -> new IllegalStateException("Role USER was not initialized"));
@@ -43,9 +49,16 @@ public class AuthenticationService {
         sendValidationEmail(user);
     }
 
-    private void sendValidationEmail(User user) {
+    private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
-        // send email
+        emailService.sendEmail(
+                user.getEmail(),
+                user.fullName(),
+                EmailTemplateName.ACTIVATE_ACCOUNT,
+                activationUrl,
+                newToken,
+                "Account activation"
+        );
 
     }
 
