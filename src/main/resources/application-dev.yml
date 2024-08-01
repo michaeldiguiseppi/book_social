@@ -1,3 +1,5 @@
+server:
+  port: 8088
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/book_social_network
@@ -38,6 +40,3 @@ application:
   mailing:
     frontend:
       activation-url: http://localhost:4200/activate-account
-
-  server:
-    port: 8088
