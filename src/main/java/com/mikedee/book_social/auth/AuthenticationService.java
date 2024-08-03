@@ -9,6 +9,7 @@ import com.mikedee.book_social.user.TokenRepository;
 import com.mikedee.book_social.user.User;
 import com.mikedee.book_social.user.UserRepository;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,7 +41,7 @@ public class AuthenticationService {
     private String activationUrl;
 
 
-    public void register(RegistrationRequest request) throws MessagingException {
+    public void register(@Valid RegistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName("USER")
                 // todo: better exception handling
                 .orElseThrow(() -> new IllegalStateException("Role USER was not initialized"));
